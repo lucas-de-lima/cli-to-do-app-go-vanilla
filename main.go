@@ -1,6 +1,12 @@
 package main
 
-import "time"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+	"time"
+)
 
 type Todo struct {
 	Description string
@@ -10,7 +16,27 @@ type Todo struct {
 }
 
 func main() {
-	println("Bom vindo ao Gerenciador de tarefas!")
+	println("Bem vindo ao Gerenciador de tarefas!")
 
-	var todo []Todo
+	var todoList []Todo
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	fmt.Println("Descrição da tarefa")
+	if scanner.Scan() {
+		description := strings.TrimSpace(scanner.Text())
+		if description != "" {
+			newTodo := Todo{
+				Description: description,
+				Done:        false,
+				StartData:   time.Now(),
+			}
+			todoList = append(todoList, newTodo)
+		}
+	}
+
+	fmt.Println("\nTarefas registradas:")
+	for i, t := range todoList {
+		fmt.Printf("%d. %s (Iniciada em %s)\n", i+1, t.Description, t.StartData.Format("02/01/2006 15:04:05"))
+	}
 }
